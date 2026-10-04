@@ -14,6 +14,10 @@ mod server;
 #[cfg(not(any(target_os = "ios")))]
 pub use self::server::*;
 mod client;
+mod auto_id;
+mod auto_id_config;
+mod auto_id_policy;
+mod auto_id_query;
 mod lan;
 #[cfg(not(any(target_os = "ios")))]
 mod rendezvous_mediator;

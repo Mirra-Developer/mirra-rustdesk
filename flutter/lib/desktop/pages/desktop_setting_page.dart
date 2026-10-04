@@ -24,6 +24,8 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../common/widgets/dialog.dart';
 import '../../common/widgets/login.dart';
+import '../connection_routing/routing_config.dart';
+import '../connection_routing/routing_page.dart';
 
 const double _kTabWidth = 200;
 const double _kTabHeight = 42;
@@ -52,6 +54,7 @@ enum SettingsTabKey {
   general,
   safety,
   network,
+  routing,
   display,
   account,
   printer,
@@ -71,6 +74,8 @@ class DesktopSettingPage extends StatefulWidget {
     if (!bind.isDisableSettings() &&
         bind.mainGetBuildinOption(key: kOptionHideNetworkSetting) != 'Y')
       SettingsTabKey.network,
+    if (routingUiEnabled && !bind.isDisableSettings() && !bind.isIncomingOnly())
+      SettingsTabKey.routing,
     if (!bind.isIncomingOnly()) SettingsTabKey.display,
     if (!bind.isDisableAccount()) SettingsTabKey.account,
     if (isWindows &&
@@ -196,6 +201,9 @@ class _DesktopSettingPageState extends State<DesktopSettingPage>
           settingTabs
               .add(_TabInfo(tab, 'Network', Icons.link_outlined, Icons.link));
           break;
+        case SettingsTabKey.routing:
+          settingTabs.add(_TabInfo(tab, '连接路由', Icons.alt_route_outlined, Icons.alt_route));
+          break;
         case SettingsTabKey.display:
           settingTabs.add(_TabInfo(tab, 'Display',
               Icons.desktop_windows_outlined, Icons.desktop_windows));
@@ -229,6 +237,9 @@ class _DesktopSettingPageState extends State<DesktopSettingPage>
           break;
         case SettingsTabKey.network:
           children.add(const _Network());
+          break;
+        case SettingsTabKey.routing:
+          children.add(const ConnectionRoutingPage());
           break;
         case SettingsTabKey.display:
           children.add(const _Display());

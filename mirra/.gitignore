@@ -1,0 +1,5 @@
+workspace/
+*.log
+*.private.*
+*.toml
+__pycache__/

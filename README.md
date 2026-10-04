@@ -1,3 +1,5 @@
+> **Mirra 定制分支**：多 ID 服务自动/手动连接路由。请先阅读 [Mirra 项目说明](MIRRA.md) 与 [构建步骤](mirra/BUILD.md)。以下保留官方 RustDesk 说明。
+
 <p align="center">
   <img src="res/logo-header.svg" alt="RustDesk - Your remote desktop"><br>
   <a href="#raw-steps-to-build">Build</a> •

@@ -103,6 +103,9 @@ pub mod file_trait;
 pub mod helper;
 pub mod io_loop;
 pub mod screenshot;
+#[cfg(all(test, feature = "flutter"))]
+#[path = "client/auto_id_connection_tests.rs"]
+mod auto_id_connection_tests;
 
 pub const MILLI1: Duration = Duration::from_millis(1);
 pub const SEC30: Duration = Duration::from_secs(30);
@@ -454,8 +457,11 @@ impl Client {
             ));
         }
 
+        let auto_route = crate::auto_id::resolve(peer, token).await?;
         let other_server = interface.get_lch().read().unwrap().other_server.clone();
-        let (peer, other_server, key, token) = if let Some((a, b, c)) = other_server.as_ref() {
+        let (peer, other_server, key, token) = if let Some(route) = auto_route.as_ref() {
+            (peer, route.server.as_str(), route.public_key.as_str(), route.token)
+        } else if let Some((a, b, c)) = other_server.as_ref() {
             (a.as_ref(), b.as_ref(), c.as_ref(), "")
         } else {
             (peer, "", key, token)
@@ -5305,6 +5311,10 @@ pub mod peer_online {
     };
 
     pub async fn query_online_states<F: FnOnce(Vec<String>, Vec<String>)>(ids: Vec<String>, f: F) {
+        if crate::auto_id::enabled() {
+            crate::auto_id::online_states(ids, f).await;
+            return;
+        }
         let test = false;
         if test {
             sleep(1.5).await;
